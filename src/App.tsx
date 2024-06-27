@@ -1,3 +1,11 @@
+import { ThemeProvider } from "styled-components";
+import { Header } from "./components/Header";
+import { theme } from "./_config/theme";
+
 export function App() {
-	return <h1>Hello from vite</h1>;
+	return (
+		<ThemeProvider theme={theme}>
+			<Header />
+		</ThemeProvider>
+	);
 }
