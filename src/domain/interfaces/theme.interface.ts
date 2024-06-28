@@ -34,5 +34,13 @@ export interface ITheme {
     _10: string;
     _11: string;
     _12: string;
+    _13: string;
+    _14: string;
+    _15: string;
+    _16: string;
+    _17: string;
+    _18: string;
+    _19: string;
+    _20: string;
   };
 }

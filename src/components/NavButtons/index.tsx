@@ -1,28 +1,22 @@
-import { useEffect } from "react";
 import { ButtonsContainer, NavButton } from "./style";
 import { AiOutlineGold } from "react-icons/ai";
-import { useLocation } from "../../hooks/useLocation";
 import { useCompanies } from "../../hooks/useCompanies";
+import { useEffect } from "react";
 
 export function NavButtons() {
-	const { companies } = useCompanies();
-	const { getQueryParam, setQueryParam } = useLocation();
+	const { companies, setSelectedCompany, company } = useCompanies();
 
 	useEffect(() => {
-		if (!getQueryParam("company")) {
-			setQueryParam("company", companies[0].id);
+		if (!company && companies.length) {
+			setSelectedCompany(companies[0].id);
 		}
-	}, [companies, setQueryParam, getQueryParam]);
+	}, [company, setSelectedCompany, companies]);
 
 	return (
 		<ButtonsContainer>
-			{companies.map((company) => (
-				<NavButton
-					isActive={getQueryParam("company") === company.id}
-					key={company.id}
-					onClick={() => setQueryParam("company", company.id)}
-				>
-					<AiOutlineGold size={22} /> {company.name}
+			{companies.map((item) => (
+				<NavButton isActive={company?.id === item.id} key={item.id} onClick={() => setSelectedCompany(item?.id)}>
+					<AiOutlineGold size={22} /> {item.name}
 				</NavButton>
 			))}
 		</ButtonsContainer>

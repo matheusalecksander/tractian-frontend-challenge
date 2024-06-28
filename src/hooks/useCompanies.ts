@@ -1,18 +1,12 @@
-import { useEffect, useState } from "react";
-import { Company } from "../domain/interfaces/company.interface";
+import { useContext } from "react";
+import { CompaniesContext } from "../contexts/companies.context";
 
 export function useCompanies() {
-	const [companies, setCompanies] = useState<Company[]>([]);
+	const context = useContext(CompaniesContext);
 
-	useEffect(() => {
-		fetch("https://fake-api.tractian.com/companies")
-			.then((response) =>
-				response.json().then((json) => {
-					setCompanies(json);
-				}),
-			)
-			.catch(() => setCompanies([]));
-	}, []);
+	if (!context) {
+		throw new Error("You must use the CompaniesContextProvider");
+	}
 
-	return { companies };
+	return context;
 }
