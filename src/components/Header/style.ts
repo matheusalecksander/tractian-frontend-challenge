@@ -6,4 +6,6 @@ export const Container = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	padding: ${({ theme }) => theme.spacing._4};
+	position: fixed;
+	width: 100%;
 `;
