@@ -5,6 +5,7 @@ import { ILocationAssets } from "../domain/interfaces/locations-assets.interface
 export interface ICompaniesContext {
 	companies: Company[];
 	getCompanyAssets: () => Promise<ILocationAssets[]>;
+	loadingAssets: boolean;
 	setSelectedCompany: (companyId?: string) => void;
 	company: Company | undefined;
 }
@@ -12,6 +13,7 @@ export interface ICompaniesContext {
 export const CompaniesContext = createContext<ICompaniesContext>({
 	companies: [],
 	getCompanyAssets: async () => Promise.resolve([]),
+	loadingAssets: false,
 	company: undefined,
 	setSelectedCompany: () => {},
 });

@@ -9,6 +9,7 @@ import { AssetType } from "../domain/enuns/asset-type.enum";
 export function CompaniesContextProvider({ children }: Readonly<PropsWithChildren>) {
 	const [company, setCompany] = useState<Company | undefined>();
 	const [companies, setCompanies] = useState<Company[]>([]);
+	const [loadingAssets, setLoadingAssets] = useState<boolean>(false);
 
 	useEffect(() => {
 		fetch("https://fake-api.tractian.com/companies")
@@ -29,12 +30,19 @@ export function CompaniesContextProvider({ children }: Readonly<PropsWithChildre
 	);
 
 	const getCompanyAssets = useCallback(async () => {
-		const locationsResponse = await fetch(`https://fake-api.tractian.com/companies/${company?.id}/locations`);
-		const locations = await locationsResponse.json();
-		const assetsResponse = await fetch(`https://fake-api.tractian.com/companies/${company?.id}/assets`);
-		const assets = await assetsResponse.json();
+		setLoadingAssets(true);
+		try {
+			const locationsResponse = await fetch(`https://fake-api.tractian.com/companies/${company?.id}/locations`);
+			const locations = await locationsResponse.json();
+			const assetsResponse = await fetch(`https://fake-api.tractian.com/companies/${company?.id}/assets`);
+			const assets = await assetsResponse.json();
 
-		return groupLocationsAndAssets(locations, assets)
+			return groupLocationsAndAssets(locations, assets);
+		} catch (error) {
+			return [];
+		} finally {
+			setLoadingAssets(false);
+		}
 	}, [company]);
 
 	function groupLocationsAndAssets(locations: ILocation[], assets: IAsset[]): ILocationAssets[] {
@@ -96,7 +104,7 @@ export function CompaniesContextProvider({ children }: Readonly<PropsWithChildre
 			}
 		});
 
-		assetMap.forEach(asset => {
+		assetMap.forEach((asset) => {
 			if (!asset.parentId && !asset.locationId) {
 				result.push(asset);
 			}
@@ -110,8 +118,9 @@ export function CompaniesContextProvider({ children }: Readonly<PropsWithChildre
 			getCompanyAssets,
 			setSelectedCompany,
 			company,
+			loadingAssets,
 		}),
-		[companies, getCompanyAssets, setSelectedCompany, company],
+		[companies, getCompanyAssets, setSelectedCompany, company, loadingAssets],
 	);
 
 	return <CompaniesContext.Provider value={contextValues}>{children}</CompaniesContext.Provider>;
